@@ -1,10 +1,14 @@
-﻿@page "/"
+@page "/"
 @using OMM.Desktop.Data.OsuDataProvider
 @using OMM.Desktop.Data.OmmApi
 @using OMM.Desktop.Data.Settings
 @using OMM.Desktop.Content.Components.MapImage
+@using System.Net.Mime
+@using OMM.Desktop.Data.OsuCollections
 @inject OmmApiService OmmApi
 @inject IOsuDataService OsuDataProvider
+@inject IJSRuntime JSRuntime
+@inject OsuCollectionsService OsuCollectionsService
 @implements IDisposable
 
 <div class="@Bem.Block()">
@@ -24,6 +28,17 @@
     </div>
     @if (!isLoading)
     {
+        
+        @if (this.mapMatches.Any())
+        {
+            <div>
+                <IconButton Text="Download results as Collection Manager collection"
+                            Style="fas"
+                            IconName="fa-download"
+                            RootClass="@Bem.Element("download-button", availableFlag)"
+                            OnClick="HandleDownloadCollectionClick"/>
+            </div>
+        }
         <div class="@Bem.Element("page-numbers")">
             @foreach (var num in this.Pages()) //for loops behave wierd. Probably reference stuff
             {
@@ -109,6 +124,19 @@
 
         this.errorMessages = mapsOrErrors.Right;
         await InvokeAsync(() => base.StateHasChanged());
+    }
+
+    private async void HandleDownloadCollectionClick()
+    {
+        var collectionName = $"{songSelection.Artist}-{songSelection.Title}";
+        var stream = await OsuCollectionsService.GetOsdbCollection(collectionName, mapMatches);
+        await JSRuntime.InvokeVoidAsync("downloadFromByteArray",
+            new
+            {
+                ByteArray = stream.ToArray(),
+                FileName = $"{collectionName}.osdb",
+                ContentType = MediaTypeNames.Application.Octet
+            });
     }
 
     private async void SongChanged(object sender, Either<SongSelectionChangedEventArgs, List<string>> argsOrErrors)

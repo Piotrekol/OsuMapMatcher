@@ -19,6 +19,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="BuildWebCompiler" Version="1.12.405" />
+		<PackageReference Include="CollectionManager" Version="1.0.8" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
 		<PackageReference Include="OsuMemoryDataProvider" Version="0.1.1" />

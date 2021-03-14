@@ -9,6 +9,7 @@ using OMM.Desktop.Data;
 using OMM.Desktop.Data.OmmApi;
 using OMM.Desktop.Data.OsuDataProvider;
 using OMM.Desktop.Data.Settings;
+using OMM.Desktop.Data.OsuCollections;
 using System;
 using System.IO;
 
@@ -34,6 +35,7 @@ namespace OMM.Desktop
             services.AddSingleton<IOsuDataService, OsuDataService>();
             services.AddSingleton<OsuDataProvider>();
             services.AddSingleton<OmmApiService>();
+            services.AddSingleton<OsuCollectionsService>();
             services.AddSingleton<ISettings, SettingsService>();
             services.AddSingleton<CircuitHandler, TrackingCircuitHandler>();
             services.AddHttpClient("OmmApi", client =>
